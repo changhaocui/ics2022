@@ -104,12 +104,13 @@ static int cmd_help(char *args) {
 static int cmd_si(char *args) {
   /* extract the first argument */
   char *arg = strtok(NULL, " ");
-  unsigned int  n;
+  int  n;
   if (arg == NULL) {
     n = 1;
   } else {
     sscanf(args, "%d", &n);
   }
+  printf("%d",n);
   cpu_exec(n);
   return 0;
 }
