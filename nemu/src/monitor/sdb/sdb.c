@@ -67,6 +67,8 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
   { "si", "执行n步命令, default 1", cmd_si },
+ /* { "info", "Display the info of registers & watchpoints", cmd_info },*/
+
 
 
   /* TODO: Add more commands */
@@ -102,7 +104,6 @@ static int cmd_si(char *args) {
   /* extract the first argument */
   char *arg = strtok(NULL, " ");
   unsigned int  n;
-
   if (arg == NULL) {
     n = 1;
   } else {
