@@ -29,7 +29,7 @@ void isa_reg_display() {
 word_t isa_reg_str2val(const char *s, bool *success) {
   int reg_num = ARRLEN(regs);
   int i;
-
+  printf("%d",reg_num);
   for (i = 0; i < reg_num; i++) {
     printf("%-8s", regs[i]);
   }
