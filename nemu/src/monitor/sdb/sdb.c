@@ -123,6 +123,7 @@ static int cmd_info(char *args){
      return 0;
   }
   if(strcmp(arg, "r") == 0){
+     printf("输出寄存器里的数值");
      isa_reg_display();
   }
   else if(strcmp(arg, "w") == 0){
