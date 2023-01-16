@@ -56,6 +56,7 @@ static int cmd_help(char *args);
 
 static int cmd_si(char *args);
 
+static int cmd_info(char *args);
 
 
 static struct {
@@ -67,7 +68,7 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
   { "si", "执行n步命令, default 1", cmd_si },
- /* { "info", "Display the info of registers & watchpoints", cmd_info },*/
+  { "info", "展示寄存器或者监视点w是是监视点r是寄存器", cmd_info },
 
 
 
@@ -113,6 +114,24 @@ static int cmd_si(char *args) {
   return 0;
 }
 
+static int cmd_info(char *args){
+  /* extract the first argument */
+  char *arg = strtok(NULL, " ");
+  if(arg == NULL){
+     printf("请输入w或r：监视器或寄存器");
+     return 0;
+  }
+  if(strcmp(arg, "r") == 0){
+     isa_reg_display();
+  }
+  else if(strcmp(arg, "w") == 0){
+     
+  }
+  else{
+     printf("请输入w或r：监视器或寄存器");
+  }
+  return 0;
+}
 
 void sdb_set_batch_mode() {
   is_batch_mode = true;
