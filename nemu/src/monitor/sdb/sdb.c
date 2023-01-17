@@ -18,7 +18,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "sdb.h"
-
+#include <memory/vaddr.h>
 static int is_batch_mode = false;
 
 void init_regex();
@@ -146,8 +146,8 @@ static int cmd_x(char *args){
   sscanf(arg, "%d", &n);
   arg = strtok(NULL, " ");
   sscanf(arg, "%x", &x);
-  printf("%d\n",n);
-  printf("%x\n",x);
+  word_t w = vaddr_read(x, 32);
+  printf("输出内存扫描\n %ld ", w);
   return 0;
 }
 
