@@ -57,7 +57,7 @@ static int cmd_help(char *args);
 static int cmd_si(char *args);
 
 static int cmd_info(char *args);
-
+static int cmd_x(char *args);
 
 static struct {
   const char *name;
@@ -69,7 +69,7 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
   { "si", "执行n步命令, default 1", cmd_si },
   { "info", "展示寄存器或者监视点w是是监视点r是寄存器", cmd_info },
-
+  { "x", "Usage: x N EXPR. Scan the memory from EXPR by N bytes", cmd_x },
 
 
   /* TODO: Add more commands */
@@ -132,6 +132,23 @@ static int cmd_info(char *args){
   else{
      printf("请输入w或r：监视器或寄存器");
   }
+  return 0;
+}
+
+static int cmd_x(char *args){
+  char *arg = strtok(NULL, " ");
+  if(arg == NULL){
+     printf("请输入内存地址");
+     return 0;
+  }
+  int n;
+  uint32_t x;
+  arg  = strtok(NULL, " ");
+  sscanf(args, "%d", &n);
+  arg = strtok(NULL, " ");
+  sscanf(args, "%x", &x);
+  printf("%d\n",n);
+  printf("%x\n",x);
   return 0;
 }
 
