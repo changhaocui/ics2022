@@ -143,10 +143,9 @@ static int cmd_x(char *args){
   }
   int n;
   uint32_t x;
-  arg  = strtok(NULL, " ");
-  sscanf(args, "%d", &n);
+  sscanf(arg, "%d", &n);
   arg = strtok(NULL, " ");
-  sscanf(args, "%x", &x);
+  sscanf(arg, "%x", &x);
   printf("%d\n",n);
   printf("%x\n",x);
   return 0;
