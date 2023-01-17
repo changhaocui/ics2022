@@ -146,7 +146,7 @@ static int cmd_x(char *args){
   sscanf(arg, "%d", &n);
   arg = strtok(NULL, " ");
   sscanf(arg, "%x", &x);
-  word_t w = vaddr_read(x, 32);
+  word_t w = vaddr_read(x, 4);
   printf("输出内存扫描\n %ld ", w);
   return 0;
 }
