@@ -127,7 +127,7 @@ static bool make_token(char *e) {
 
   return true;
 }
-bool check_parentheses(int p, int q) {
+bool check_parentheses(int p, int q) { //处理括号是否合法 是否是最外层括号
   bool flag = true;//设置标志位判断括号是否匹配
   int par = 0;
   for (int i = p; i <= q; i++) {
