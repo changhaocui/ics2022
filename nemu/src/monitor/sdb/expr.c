@@ -175,7 +175,7 @@ int find_major(int p, int q) {
 
 
 word_t eval(int p, int q, bool *ok) {
-  printf("式子的起始点%d  式子的结束点%d",p,q);
+  printf("式子的起始点%d  式子的结束点%d \n",p,q);
   *ok = true;
   if (p > q) {
     *ok = false;
@@ -189,9 +189,11 @@ word_t eval(int p, int q, bool *ok) {
     return ret;
   } 
   else if (check_parentheses(p, q)) {
+    printf("括号合法\n");
     return eval(p+1, q-1, ok);
   } 
   else {    
+    printf("去掉括号后进入寻找主符号\n");
     int major = find_major(p, q);
     if (major < 0) {
       *ok = false;
