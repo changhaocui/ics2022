@@ -175,6 +175,7 @@ int find_major(int p, int q) {
 
 
 word_t eval(int p, int q, bool *ok) {
+  printf("式子的起始点%d  式子的结束点%d",p,q);
   *ok = true;
   if (p > q) {
     *ok = false;
