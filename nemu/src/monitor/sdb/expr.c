@@ -167,6 +167,7 @@ int find_major(int p, int q) {
       }
     }
   }
+  printf("%d",ret);
   if (par != 0) return -1;
   return ret;
 }
