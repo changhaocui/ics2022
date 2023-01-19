@@ -58,7 +58,7 @@ static int cmd_si(char *args);
 
 static int cmd_info(char *args);
 static int cmd_x(char *args);
-
+static int cmd_p(char *args);
 static struct {
   const char *name;
   const char *description;
@@ -69,8 +69,8 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
   { "si", "执行n步命令, default 1", cmd_si },
   { "info", "展示寄存器或者监视点w是是监视点r是寄存器", cmd_info },
-  { "x", "Usage: x N EXPR. Scan the memory from EXPR by N bytes", cmd_x },
-
+  { "x", "扫描内存", cmd_x },
+  {"p", "Usage: p EXPR. Calculate the expression, e.g. p $eax + 1", cmd_p },
 
   /* TODO: Add more commands */
 
@@ -148,6 +148,16 @@ static int cmd_x(char *args){
   sscanf(arg, "%x", &x);
   word_t w = vaddr_read(x, 4);
   printf("输出内存扫描\n %ld \n", w);
+  return 0;
+}
+static int cmd_p(char* args) {
+  bool success;
+  word_t res = expr(args, &success);
+  if (!success) {
+    puts("invalid expression");
+  } else {
+    printf("%lu\n", res);
+  }
   return 0;
 }
 
