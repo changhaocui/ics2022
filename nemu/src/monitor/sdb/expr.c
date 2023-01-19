@@ -134,6 +134,7 @@ bool check_parentheses(int p, int q) {
     for (int i = p; i <= q; i++) {
       if (tokens[i].type=='(') par++;
       else if (tokens[i].type==')') par--;
+      printf("%d",par);
       if(par < 0) assert(0);
       else if (par == 0&&q != i) flag = false; // the leftest parenthese is matched
     }
