@@ -128,16 +128,17 @@ static bool make_token(char *e) {
   return true;
 }
 bool check_parentheses(int p, int q) {
+  bool flag = true;//设置标志位判断括号是否匹配
   if (tokens[p].type=='(' && tokens[q].type==')') {
     int par = 0;
     for (int i = p; i <= q; i++) {
       if (tokens[i].type=='(') par++;
       else if (tokens[i].type==')') par--;
-
-      if (par == 0) return i==q; // the leftest parenthese is matched
+      if(par < 0) assert(0);
+      else if (par == 0&&q != i) flag = false; // the leftest parenthese is matched
     }
   }
-  return false;
+  return flag;
 }
 
 int find_major(int p, int q) {
@@ -146,16 +147,11 @@ int find_major(int p, int q) {
     if (tokens[i].type == TK_NUM) {
       continue;
     }
-    if (tokens[i].type == '(') {
+    if (tokens[i].type == '(') { //括号内的符号不可能为主符号
       par++;
     } else if (tokens[i].type == ')') {
-      if (par == 0) {
-        return -1;
-      }
       par--;
-    } else if (par > 0) {
-      continue;
-    } else {
+    } else if (par == 0){
       int tmp_type = 0;
       switch (tokens[i].type) {
       case '*': case '/': tmp_type = 1; break;
