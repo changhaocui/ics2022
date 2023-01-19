@@ -130,14 +130,12 @@ static bool make_token(char *e) {
 bool check_parentheses(int p, int q) {
   bool flag = true;//设置标志位判断括号是否匹配
   int par = 0;
-  if (tokens[p].type=='(' && tokens[q].type==')') {
-    for (int i = p; i <= q; i++) {
-      if (tokens[i].type=='(') par++;
-      else if (tokens[i].type==')') par--;
-      printf("%d",par);
-      if(par < 0) assert(0);
-      else if (par == 0&&q != i) flag = false; // the leftest parenthese is matched
-    }
+  for (int i = p; i <= q; i++) {
+    if (tokens[i].type=='(') par++;
+    else if (tokens[i].type==')') par--;
+     printf("%d",par);
+    if(par < 0) assert(0);
+    else if (par == 0&&q != i) flag = false; // the leftest parenthese is matched
   }
   if(par != 0)
     assert(0);
