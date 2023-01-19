@@ -129,8 +129,8 @@ static bool make_token(char *e) {
 }
 bool check_parentheses(int p, int q) {
   bool flag = true;//设置标志位判断括号是否匹配
+  int par = 0;
   if (tokens[p].type=='(' && tokens[q].type==')') {
-    int par = 0;
     for (int i = p; i <= q; i++) {
       if (tokens[i].type=='(') par++;
       else if (tokens[i].type==')') par--;
@@ -138,6 +138,8 @@ bool check_parentheses(int p, int q) {
       else if (par == 0&&q != i) flag = false; // the leftest parenthese is matched
     }
   }
+  if(par != 0)
+    assert(0);
   return flag;
 }
 
