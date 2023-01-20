@@ -24,7 +24,7 @@ enum
 {
   /* TODO: Add more token types */
   TK_NOTYPE = 256,TK_EQ = 255,TK_NEQ = 254,TK_AND = 253,TK_OR = 252,
-  TK_HNUM = 251,TK_NUM = 250,TK_VAR = 257,TK_REG = 258,TK_DEREF = 259,DEREF=300
+  TK_HNUM = 251,TK_NUM = 250,TK_VAR = 257,TK_REG = 258,TK_DEREF = 259
 };
 
 static struct rule {
@@ -179,18 +179,24 @@ word_t eval(int p, int q, bool *ok) {
     *ok = false;
     return 0;
   } else if (p == q) {
-    if (tokens[p].type != TK_NUM) {
+    if (tokens[p].type != TK_NUM && tokens->type != TK_REG) {
       *ok = false;
       return 0;
+    }else if(tokens->type == TK_NUM){
+      word_t ret = strtol(tokens[p].str, NULL, 10);
+      return ret;
+    }else 
+    {
+      return isa_reg_str2val( tokens->str , ok);
     }
-    word_t ret = strtol(tokens[p].str, NULL, 10);
-    return ret;
   } 
   else if (check_parentheses(p, q)) {
     printf("括号合法\n");
     return eval(p+1, q-1, ok);
-  } 
-  else {    
+  } else if (tokens[p].type == TK_DEREF){
+      tokens[p + 1].type = TK_REG;
+      return eval(p+1,q,ok); 
+  }else {    
     printf("去掉括号后进入寻找主符号\n");
     int major = find_major(p, q);
     if (major < 0) {
@@ -228,7 +234,7 @@ word_t expr(char *e, bool *success) {
   /* TODO: Insert codes to evaluate the expression. */
   for (int i = 0; i < nr_token; i ++) {
     if (tokens[i].type == '*' && (i == 0 || (tokens[i - 1].type != TK_NUM && tokens[i - 1].type != TK_REG) )) {
-      tokens[i].type = DEREF;
+      tokens[i].type = TK_DEREF ;
     }
   }
    return eval(0, nr_token-1, success);
