@@ -35,7 +35,7 @@ void isa_reg_display() {
 word_t isa_reg_str2val(const char *s, bool *success) {
   int reg_num = ARRLEN(regs);
   int i;
-  printf("输出传入的字符串%s",s);
+  printf("输出传入的寄存器名字%c",s[0]);
   for (i = 0; i < reg_num; i++) {
     if(regs[i] == s){
       return cpu.gpr[i];
