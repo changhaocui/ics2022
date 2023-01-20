@@ -178,7 +178,7 @@ word_t eval(int p, int q, bool *ok) {
   if (p > q) {
     *ok = false;
     return 0;
-  } else if (p == q) {
+  } else if (p == q) {//根据不同类型返回值
     if (tokens[p].type != TK_NUM && tokens->type != TK_REG) {
       *ok = false;
       return 0;
@@ -187,13 +187,13 @@ word_t eval(int p, int q, bool *ok) {
       return ret;
     }else 
     {
-      return isa_reg_str2val( tokens->str , ok);
+      return isa_reg_str2val(tokens[p].str, ok);
     }
   } 
   else if (check_parentheses(p, q)) {
     printf("括号合法\n");
     return eval(p+1, q-1, ok);
-  } else if (tokens[p].type == TK_DEREF){
+  } else if (tokens[p].type == TK_DEREF){//特殊符号时进行处理
       tokens[p + 1].type = TK_REG;
       return eval(p+1,q,ok); 
   }else {    
