@@ -37,11 +37,11 @@ word_t isa_reg_str2val(const char *s, bool *success) {
   int i;
   printf("输出传入的寄存器名字%c\n",s[0]);
   for (i = 0; i < reg_num; i++) {
-    if(regs[i] == s){
+    if(strcmp(regs[i],s) == 0){
       return cpu.gpr[i];
     }
   }
   printf("寄存器不存在");
-  success = false;  
+  *success = false;  
   return 0;
 }
