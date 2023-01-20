@@ -24,7 +24,7 @@ enum
 {
   /* TODO: Add more token types */
   TK_NOTYPE = 256,TK_EQ = 255,TK_NEQ = 254,TK_AND = 253,TK_OR = 252,
-  TK_HNUM = 251,TK_NUM = 250,TK_VAR = 257,TK_REG = 258,TK_DEREF = 259
+  TK_HNUM = 251,TK_NUM = 250,TK_VAR = 257,TK_REG = 258,TK_DEREF = 259,DEREF=300
 };
 
 static struct rule {
@@ -226,5 +226,10 @@ word_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
+  for (int i = 0; i < nr_token; i ++) {
+    if (tokens[i].type == '*' && (i == 0 || (tokens[i - 1].type != TK_NUM && tokens[i - 1].type != TK_REG) )) {
+      tokens[i].type = DEREF;
+    }
+  }
    return eval(0, nr_token-1, success);
 }
