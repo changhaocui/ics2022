@@ -156,6 +156,7 @@ int find_major(int p, int q) {
     } else if (par == 0){
       int tmp_type = 0;
       switch (tokens[i].type) {
+      case TK_DEREF: tmp_type = 0; break;
       case '*': case '/': tmp_type = 1; break;
       case '+': case '-': tmp_type = 2; break;
       default: assert(0);
