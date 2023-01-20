@@ -188,7 +188,8 @@ word_t eval(int p, int q, bool *ok) {
       return ret;
     }else 
     {
-      return isa_reg_str2val(tokens[p].str,ok);
+      isa_reg_str2val(tokens[p].str,ok);
+      return 1;
     }
   } 
   else if (check_parentheses(p, q)) {
