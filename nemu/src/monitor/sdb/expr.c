@@ -199,8 +199,6 @@ word_t eval(int p, int q, bool *ok) {
     printf("括号合法\n");
     return eval(p+1, q-1, ok);
   } else if (tokens[p].type == TK_DEREF){//特殊符号时进行处理
-      printf("将deref的位置后面%d位转变为寄存器\n",p+1);
-      tokens[p + 1].type = TK_REG;
       return eval(p+1,q,ok); 
   }else {    
     printf("去掉括号后进入寻找主符号\n");
@@ -242,6 +240,8 @@ word_t expr(char *e, bool *success) {
     if (tokens[i].type == '*' && (i == 0 || (tokens[i - 1].type != TK_NUM && tokens[i - 1].type != TK_REG) )) {
       printf("将*号转变为解引用%d\n",i);
       tokens[i].type = TK_DEREF ;
+      printf("将deref的位置后面%d位转变为寄存器\n",i+1);     
+      tokens[i + 1].type = TK_REG;
     }
   }
    return eval(0, nr_token-1, success);
