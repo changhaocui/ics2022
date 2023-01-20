@@ -20,7 +20,7 @@
 
 
 #include <regex.h>
-
+word_t isa_reg_str2val(const char *name, bool *success);
 enum
 {
   /* TODO: Add more token types */
