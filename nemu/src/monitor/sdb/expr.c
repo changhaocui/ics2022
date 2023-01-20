@@ -20,7 +20,7 @@
 
 
 #include <regex.h>
-word_t isa_reg_str2val(const char *name, bool *success);
+
 enum
 {
   /* TODO: Add more token types */
@@ -188,7 +188,8 @@ word_t eval(int p, int q, bool *ok) {
       return ret;
     }else 
     {
-      return isa_reg_str2val(tokens[p].str, ok);
+      isa_reg_display();
+      return 1;
     }
   } 
   else if (check_parentheses(p, q)) {
