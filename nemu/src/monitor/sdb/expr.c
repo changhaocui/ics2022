@@ -168,9 +168,8 @@ int find_major(int p, int q) {
       }
     }
   }
-  printf("%d",ret);
   if (par != 0) return -1;
-  printf("%s\n",tokens[ret].str);
+  printf("输出主符号的字符串%s\n",tokens[ret].str);
   return ret;
 }
 
