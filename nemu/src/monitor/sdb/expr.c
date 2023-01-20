@@ -186,12 +186,12 @@ word_t eval(int p, int q, bool *ok) {
       *ok = false;
       return 0;
     }else if(tokens->type == TK_NUM){
-      printf("返回数字的值");
+      printf("返回数字的值\n");
       word_t ret = strtol(tokens[p].str, NULL, 10);
       return ret;
     }else 
     {
-      printf("返回寄存器的值");
+      printf("返回寄存器的值\n");
       return isa_reg_str2val(tokens[p].str,ok);
     }
   } 
