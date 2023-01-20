@@ -146,7 +146,7 @@ bool check_parentheses(int p, int q) { //处理括号是否合法 是否是最�
 int find_major(int p, int q) {
   int ret = -1, par = 0, op_type = 0;
   for (int i = p; i <= q; i++) {
-    if (tokens[i].type == TK_NUM) {
+    if (tokens[i].type == TK_NUM || tokens[i].type == TK_REG || tokens[i].type == TK_DEREF ) {
       continue;
     }
     if (tokens[i].type == '(') { //括号内的符号不可能为主符号
