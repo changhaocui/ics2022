@@ -155,6 +155,7 @@ int find_major(int p, int q) {
       par--;
     } else if (par == 0){
       int tmp_type = 0;
+      printf("输出tokenstype的数值%d\n",tokens[i].type);
       switch (tokens[i].type) {
       case TK_DEREF: tmp_type = 0; break;
       case '*': case '/': tmp_type = 1; break;
