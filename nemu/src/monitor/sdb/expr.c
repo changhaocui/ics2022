@@ -169,7 +169,7 @@ int find_major(int p, int q) {
     }
   }
   if (par != 0) return -1;
-  printf("输出主符号的字符串%s\n",tokens[ret].str);
+  printf("输出主符号的字符串%s位置%d\n",tokens[ret].str,ret);
   return ret;
 }
 
