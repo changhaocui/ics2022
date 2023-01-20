@@ -182,7 +182,7 @@ word_t eval(int p, int q, bool *ok) {
     *ok = false;
     return 0;
   } else if (p == q) {//根据不同类型返回值
-    if (tokens[p].type != TK_NUM && tokens->type != TK_REG) {
+    if (tokens[p].type != TK_NUM && tokens[p].type != TK_REG) {
       *ok = false;
       return 0;
     }else if(tokens->type == TK_NUM){
