@@ -174,7 +174,7 @@ static int cmd_w(char* args) {
     return 0;
   }
   bool success;
-  printf("求res");
+  printf("求res\n");
   word_t res = expr(args, &success);
   printf("res监视结束");
   if (!success) {
