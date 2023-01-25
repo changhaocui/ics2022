@@ -176,7 +176,7 @@ static int cmd_w(char* args) {
   bool success;
   printf("求res\n");
   word_t res = expr(args, &success);
-  printf("res监视结束");
+  printf("监视的结果%lu\n", res);
   if (!success) {
     puts("invalid expression");
   } else {
