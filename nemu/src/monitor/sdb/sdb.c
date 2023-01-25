@@ -178,6 +178,7 @@ static int cmd_w(char* args) {
   if (!success) {
     puts("invalid expression");
   } else {
+    printf("进入开启监视节点");
     wp_watch(args, res);
   }
   return 0;
