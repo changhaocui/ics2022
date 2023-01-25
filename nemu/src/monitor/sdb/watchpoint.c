@@ -66,6 +66,7 @@ static void free_wp(WP *wp) {
 
 
 void wp_watch(char *expr, word_t res) {
+  printf("开启监视节点");
   WP* wp = new_wp();
   strcpy(wp->expr, expr);
   wp->old = res;
