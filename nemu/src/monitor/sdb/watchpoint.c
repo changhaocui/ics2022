@@ -63,6 +63,7 @@ static void free_wp(WP *wp) {
   free_ = wp;
 }
 
+
 void wp_watch(char *expr, word_t res) {
   WP* wp = new_wp();
   strcpy(wp->expr, expr);
@@ -89,6 +90,7 @@ void wp_iterate() {
     h = h->next;
   }
 }
+
 
 void wp_difftest() {
   WP* h = head;
