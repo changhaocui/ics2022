@@ -18,6 +18,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "sdb.h"
+#include "watchpoint.c"
 #include <memory/vaddr.h>
 static int is_batch_mode = false;
 
@@ -59,6 +60,9 @@ static int cmd_si(char *args);
 static int cmd_info(char *args);
 static int cmd_x(char *args);
 static int cmd_p(char *args);
+static int cmd_w(char *args);
+static int cmd_d(char *args);
+
 static struct {
   const char *name;
   const char *description;
@@ -70,7 +74,9 @@ static struct {
   { "si", "执行n步命令, default 1", cmd_si },
   { "info", "展示寄存器或者监视点w是是监视点r是寄存器", cmd_info },
   { "x", "扫描内存", cmd_x },
-  {"p", "Usage: p EXPR. Calculate the expression, e.g. p $eax + 1", cmd_p },
+  {"p", "Usage: p 计算器计算简易表达式, e.g. p $eax + 1", cmd_p },
+  { "w", "Usage: w 设置监视点", cmd_w },
+  { "d", "Usage: d 删除监视点", cmd_d },
 
   /* TODO: Add more commands */
 
@@ -127,7 +133,8 @@ static int cmd_info(char *args){
      isa_reg_display();
   }
   else if(strcmp(arg, "w") == 0){
-     
+     printf("输出监视点的值");
+     wp_iterate();
   }
   else{
      printf("请输入w或r：监视器或寄存器");
@@ -150,6 +157,7 @@ static int cmd_x(char *args){
   printf("输出内存扫描\n %ld \n", w);
   return 0;
 }
+
 static int cmd_p(char* args) {
   bool success;
   word_t res = expr(args, &success);
@@ -158,6 +166,32 @@ static int cmd_p(char* args) {
   } else {
     printf("%lu\n", res);
   }
+  return 0;
+}
+
+static int cmd_w(char* args) {
+  if (!args) {
+    printf("Usage: w EXPR\n");
+    return 0;
+  }
+  bool success;
+  word_t res = expr(args, &success);
+  if (!success) {
+    puts("invalid expression");
+  } else {
+    wp_watch(args, res);
+  }
+  return 0;
+}
+
+static int cmd_d(char* args) {
+  char *arg = strtok(NULL, "");
+  if (!arg) {
+    printf("Usage: d N\n");
+    return 0;
+  }
+  int no = strtol(arg, NULL, 10);
+  wp_remove(no);
   return 0;
 }
 
@@ -195,9 +229,9 @@ void sdb_mainloop() {
     for (i = 0; i < NR_CMD; i ++) {
       if (strcmp(cmd, cmd_table[i].name) == 0) {
         if (cmd_table[i].handler(args) < 0) { 
-		nemu_state.state = NEMU_QUIT; //甚至退出状态
-		return;
-	 }
+	      	nemu_state.state = NEMU_QUIT; //甚至退出状态
+		      return;
+	      }
         break;
       }
     }

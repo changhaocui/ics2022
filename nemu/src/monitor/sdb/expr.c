@@ -238,7 +238,7 @@ word_t expr(char *e, bool *success) {
   /* TODO: Insert codes to evaluate the expression. */
   for (int i = 0; i < nr_token; i ++) {
     if (tokens[i].type == '*' && (i == 0 || (tokens[i - 1].type != TK_NUM && tokens[i - 1].type != TK_REG) )) {
-      printf("将*号转变为解引用%d\n",i);
+      printf("将*号转变为解引用%d\n",i);//如果有多个*-+例如 开头写成 if(tokens[i].type == '-')
       tokens[i].type = TK_DEREF ;
       printf("将deref的位置后面%d位转变为寄存器\n",i+1);     
       tokens[i + 1].type = TK_REG;
