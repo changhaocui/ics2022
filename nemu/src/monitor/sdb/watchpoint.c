@@ -43,7 +43,7 @@ void init_wp_pool() {
 
 /* TODO: Implement the functionality of watchpoint */
 static WP* new_wp() {
-  printf("创建新的监视节点");
+  printf("创建新的监视节点\n");
   assert(free_);
   WP* ret = free_;
   free_ = free_->next;
