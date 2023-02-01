@@ -23,7 +23,7 @@ typedef struct {
   vaddr_t pc;
 } riscv64_CPU_state;
 
-// decode
+// decode这个结构体用于存放在执行一条指令过程中所需的信息, 包括指令的PC, 下一条指令的PC等. 还有一些信息是ISA相关的
 typedef struct {
   union {
     uint32_t val;

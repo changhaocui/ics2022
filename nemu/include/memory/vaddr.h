@@ -18,7 +18,7 @@
 
 #include <common.h>
 
-word_t vaddr_ifetch(vaddr_t addr, int len);
+word_t vaddr_ifetch(vaddr_t addr, int len); //len表示指令集大小n*8位
 word_t vaddr_read(vaddr_t addr, int len);
 void vaddr_write(vaddr_t addr, int len, word_t data);
 
