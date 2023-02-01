@@ -23,7 +23,7 @@
 #define Mw vaddr_write
 
 enum {
-  TYPE_I, TYPE_U, TYPE_S,
+  TYPE_I, TYPE_U, TYPE_S,TYPE_J, //TYPE_J后添加的
   TYPE_N, // none
 };
 
@@ -32,7 +32,13 @@ enum {
 #define immI() do { *imm = SEXT(BITS(i, 31, 20), 12); } while(0)
 #define immU() do { *imm = SEXT(BITS(i, 31, 12), 20) << 12; } while(0)
 #define immS() do { *imm = (SEXT(BITS(i, 31, 25), 7) << 5) | BITS(i, 11, 7); } while(0)
-
+//自定义
+#define immJ() do { *imm = SEXT(( \
+(BITS(i, 31, 31) << 19) | \
+BITS(i, 30, 21) | \
+(BITS(i, 20, 20) << 10) | \
+(BITS(i, 19, 12) << 11) \
+) << 1, 21); Log(ANSI_FG_CYAN "%#lx\n" ANSI_NONE, *imm); } while(0)
 static void decode_operand(Decode *s, int *dest, word_t *src1, word_t *src2, word_t *imm, int type) {
   //译码结果将记录到函数参数dest, src1, src2和imm中, 它们分别代表目的操作数, 两个源操作数和立即数.
   uint32_t i = s->isa.inst.val;
@@ -46,6 +52,7 @@ static void decode_operand(Decode *s, int *dest, word_t *src1, word_t *src2, wor
     case TYPE_I: src1R();          immI(); break;
     case TYPE_U:                   immU(); break;
     case TYPE_S: src1R(); src2R(); immS(); break;
+    case TYPE_J:                   immJ(); break;//自己加的
   }
 }
 
@@ -66,7 +73,9 @@ static int decode_exec(Decode *s) {
   INSTPAT("??????? ????? ????? 011 ????? 01000 11", sd     , S, Mw(src1 + imm, 8, src2));
   //自己添加的指令
   INSTPAT("??????? ????? ????? ??? ????? 01101 11", lui    , U, R(dest) = imm);
-
+  INSTPAT("??????? ????? ????? 000 ????? 00100 11", addi   , I, R(dest) = src1 + imm);
+  INSTPAT("??????? ????? ????? ??? ????? 11011 11", jal    , J, s->dnpc = s->pc; s->dnpc += imm; R(dest) = s->pc + 4);
+  INSTPAT("??????? ????? ????? 000 ????? 11001 11", jalr   , I, s->dnpc = (src1 + imm) & ~(word_t)1; R(dest) = s->pc + 4);
   //自己添加的指令
   INSTPAT("0000000 00001 00000 000 00000 11100 11", ebreak , N, NEMUTRAP(s->pc, R(10))); // R(10) is $a0
   INSTPAT("??????? ????? ????? ??? ????? ????? ??", inv    , N, INV(s->pc));
