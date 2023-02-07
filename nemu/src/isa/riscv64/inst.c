@@ -38,7 +38,7 @@ enum {
 BITS(i, 30, 21) | \
 (BITS(i, 20, 20) << 10) | \
 (BITS(i, 19, 12) << 11) \
-) << 1, 20); Log(ANSI_FG_CYAN "%#lx\n" ANSI_NONE, *imm); } while(0)
+) << 1, 21); Log(ANSI_FG_CYAN "%#lx\n" ANSI_NONE, *imm); } while(0)
 #define immB() do { *imm = (SEXT(BITS(i, 31, 30), 1) << 12) | (SEXT(BITS(i, 30, 25), 6) << 5) | (SEXT(BITS(i, 11, 8), 4) << 1) | (SEXT(BITS(i, 8, 7), 1) << 11); } while(0)
 static void decode_operand(Decode *s, int *dest, word_t *src1, word_t *src2, word_t *imm, int type) {
   //译码结果将记录到函数参数dest, src1, src2和imm中, 它们分别代表目的操作数, 两个源操作数和立即数.
