@@ -29,7 +29,7 @@ void isa_reg_display() {
   int i;
 
   for (i = 0; i < reg_num; i++) {
-    printf("%-8s%-#20x%-20d\n", regs[i],(unsigned int) cpu.gpr[i],(int) cpu.gpr[i]);
+    printf("%-8s%-#20lx%-20ld\n", regs[i], cpu.gpr[i], cpu.gpr[i]);
   }
 }
 word_t isa_reg_str2val(const char *s, bool *success) {
