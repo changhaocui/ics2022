@@ -23,7 +23,7 @@
 #define Mw vaddr_write
 
 enum {
-  TYPE_I, TYPE_U, TYPE_S,TYPE_J, //TYPE_J后添加的
+  TYPE_I, TYPE_U, TYPE_S,TYPE_J,TYPE_R,TYPE_B, //TYPE_J后添加的
   TYPE_N, // none
 };
 
