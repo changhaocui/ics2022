@@ -39,12 +39,7 @@ BITS(i, 30, 21) | \
 (BITS(i, 20, 20) << 10) | \
 (BITS(i, 19, 12) << 11) \
 ) << 1, 20); Log(ANSI_FG_CYAN "%#lx\n" ANSI_NONE, *imm); } while(0)
-#define immB() do { *imm = SEXT(( \
-(BITS(i, 31, 31) << 11) | \
-BITS(i, 30, 25)<<4 | \
-(BITS(i, 11, 8) ) | \
-(BITS(i, 8, 7) << 10) \
-) << 1, 21); Log(ANSI_FG_CYAN "%#lx\n" ANSI_NONE, *imm); } while(0)
+#define immB() do { *imm = (SEXT(BITS(i, 31, 30), 1) << 12) | (SEXT(BITS(i, 30, 25), 6) << 5) | (SEXT(BITS(i, 11, 8), 4) << 1) | (SEXT(BITS(i, 8, 7), 1) << 11); } while(0)
 static void decode_operand(Decode *s, int *dest, word_t *src1, word_t *src2, word_t *imm, int type) {
   //译码结果将记录到函数参数dest, src1, src2和imm中, 它们分别代表目的操作数, 两个源操作数和立即数.
   uint32_t i = s->isa.inst.val;
@@ -72,7 +67,20 @@ static int decode_exec(Decode *s) {
   decode_operand(s, &dest, &src1, &src2, &imm, concat(TYPE_, type)); \
   __VA_ARGS__ ; \
 }
-
+#define MAYBE_FUNC_JAL(s) IFDEF(CONFIG_ITRACE, { \
+  if (dest == 1) { \
+    trace_func_call(s->pc, s->dnpc, false); \
+  } \
+})
+#define MAYBE_FUNC_JALR(s) IFDEF(CONFIG_ITRACE, { \
+    if (s->isa.inst.val == 0x00008067) { \
+      trace_func_ret(s->pc); \
+    } else if (dest == 1) { \
+      trace_func_call(s->pc, s->dnpc, false); \
+    } else if (dest == 0 && imm == 0) { \
+      trace_func_call(s->pc, s->dnpc, true); \
+    } \
+  })
   INSTPAT_START();
   INSTPAT("??????? ????? ????? ??? ????? 00101 11", auipc  , U, R(dest) = s->pc + imm);
   INSTPAT("??????? ????? ????? 011 ????? 00000 11", ld    , I, R(dest) = Mr(src1 + imm, 8));
