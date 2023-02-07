@@ -33,12 +33,10 @@ enum {
 #define immU() do { *imm = SEXT(BITS(i, 31, 12), 20) << 12; } while(0)
 #define immS() do { *imm = (SEXT(BITS(i, 31, 25), 7) << 5) | BITS(i, 11, 7); } while(0)
 //自定义
-#define immJ() do { *imm = SEXT(( \
-(BITS(i, 31, 31) << 19) | \
-BITS(i, 30, 21) | \
-(BITS(i, 20, 20) << 10) | \
-(BITS(i, 19, 12) << 11) \
-) << 1, 21); Log(ANSI_FG_CYAN "%#lx\n" ANSI_NONE, *imm); } while(0)
+#define immJ() do { *imm = SEXT(BITS(i, 31, 31), 1) << 20 |\
+SEXT(BITS(i, 30, 21), 10) << 1 |\
+SEXT(BITS(i, 20, 20), 1) << 11 |\
+SEXT(BITS(i, 19, 12), 8) << 12 ; } while(0)
 #define immB() do { *imm = (SEXT(BITS(i, 31, 30), 1) << 12) | (SEXT(BITS(i, 30, 25), 6) << 5) | (SEXT(BITS(i, 11, 8), 4) << 1) | (SEXT(BITS(i, 8, 7), 1) << 11); } while(0)
 static void decode_operand(Decode *s, int *dest, word_t *src1, word_t *src2, word_t *imm, int type) {
   //译码结果将记录到函数参数dest, src1, src2和imm中, 它们分别代表目的操作数, 两个源操作数和立即数.
