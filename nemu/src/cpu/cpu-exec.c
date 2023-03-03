@@ -29,9 +29,9 @@ CPU_state cpu = {};
 uint64_t g_nr_guest_inst = 0;
 static uint64_t g_timer = 0; // unit: us
 static bool g_print_step = false;
-
+void rtrace_display();
 void device_update();
-
+void ringtrace_inst();
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #ifdef CONFIG_ITRACE_COND
   if (ITRACE_COND) { log_write("%s\n", _this->logbuf); }
@@ -40,16 +40,17 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
   IFDEF(CONFIG_WATCHPOINT, wp_difftest()); // 监视点添加
 }
-
+//int    snprintf  (char *str, size_t size, const char *format, ...);
 static void exec_once(Decode *s, vaddr_t pc) {
+  ringtrace_inst(s);
   s->pc = pc;
   s->snpc = pc;
   isa_exec_once(s);
   cpu.pc = s->dnpc;
 #ifdef CONFIG_ITRACE
-  char *p = s->logbuf;
-  p += snprintf(p, sizeof(s->logbuf), FMT_WORD ":", s->pc);
-  int ilen = s->snpc - s->pc;
+  char *p = s->logbuf; //p记录运行的命令
+  p += snprintf(p, sizeof(s->logbuf), FMT_WORD ":", s->pc);//snprintf将命令记录到开辟的p中
+  int ilen = s->snpc - s->pc;//FMT_WORD 用于格式化输出变成word_8类型
   int i;
   uint8_t *inst = (uint8_t *)&s->isa.inst.val;
   for (i = ilen - 1; i >= 0; i --) {
@@ -89,6 +90,7 @@ static void statistic() {
 }
 
 void assert_fail_msg() {
+  rtrace_display();
   isa_reg_display();
   statistic();
 }
