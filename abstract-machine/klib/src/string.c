@@ -46,58 +46,81 @@ char *strncpy(char *dest, const char *src, size_t len)
 
 
 
-char *strcat(char *dst, const char *src) {
-  char *ret = dst;
-  assert(dst && src);
-	while (*dst)
-	{
-		dst++;
-	}
-	while (*dst++ = *src++)
-	{
-		;
-	}
-	return ret;
+char * strcat(char * dest, const char * src)
+{
+        char *tmp = dest;
+ 
+        while (*dest)
+                dest++;
+        while ((*dest++ = *src++) != '\0')
+                ;
+ 
+        return tmp;
 }
 
-int strcmp(const char *s1, const char *s2) {
-      char*   p1;  
-      char*   p2;  
-      p1=s1;  
-      p2=s2;  
-      while((*p1)&&(*p2))  
-      {  
-          if(*p1==*p2)  
-          {  
-              p1++;p2++;  
-          }else{  
-              return   (*p1-*p2);  
-          }  
-      }  
-      return   (*p1-*p2);  
+
+int strcmp ( const char* src, const char* dst ){
+
+	int ret = 0 ;
+
+	while( ! (ret = *(unsigned char *)src - *(unsigned char *)dst) && *dst)
+		++src, ++dst;
+
+	if ( ret < 0 )
+		ret = -1 ;
+
+	else if ( ret > 0 )
+		ret = 1 ;
+	return( ret );
 }
 
-int strncmp(const char *s1, const char *s2, size_t n) {
-      int i = 0;
-      char*   p1;  
-      char*   p2;  
-      p1=s1;  
-      p2=s2;  
-      while((*p1)&&(*p2))  
-      {  
-          if(*p1==*p2)  
-          {  
-              p1++;p2++;  
-          }else{  
-              return   (*p1-*p2);  
-          } 
-          i++;
-          if(i == n){
-            break;
-          } 
-      }  
-      return   (*p1-*p2);  
+/* Compare no more than N characters of S1 and S2,
+   returning less than, equal to or greater than zero
+   if S1 is lexicographically less than, equal to or
+   greater than S2.  */
+
+int strncmp (const char *s1, const char *s2, size_t n)
+{
+  unsigned char c1 = '\0';
+  unsigned char c2 = '\0';
+ 
+  if (n >= 4)
+    {
+      size_t n4 = n >> 2;
+      do
+	{
+	  c1 = (unsigned char) *s1++;
+	  c2 = (unsigned char) *s2++;
+	  if (c1 == '\0' || c1 != c2)
+	    return c1 - c2;
+	  c1 = (unsigned char) *s1++;
+	  c2 = (unsigned char) *s2++;
+	  if (c1 == '\0' || c1 != c2)
+	    return c1 - c2;
+	  c1 = (unsigned char) *s1++;
+	  c2 = (unsigned char) *s2++;
+	  if (c1 == '\0' || c1 != c2)
+	    return c1 - c2;
+	  c1 = (unsigned char) *s1++;
+	  c2 = (unsigned char) *s2++;
+	  if (c1 == '\0' || c1 != c2)
+	    return c1 - c2;
+	} while (--n4 > 0);
+      n &= 3;
+    }
+ 
+  while (n > 0)
+    {
+      c1 = (unsigned char) *s1++;
+      c2 = (unsigned char) *s2++;
+      if (c1 == '\0' || c1 != c2)
+	return c1 - c2;
+      n--;
+    }
+ 
+  return c1 - c2;
 }
+
 
 void *(memset) (void *s,int c,size_t n)
 {
