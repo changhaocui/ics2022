@@ -194,25 +194,25 @@ void rtrace_display(){
 // // 	free(node);
 // // }
 
-// void trace_func_call(paddr_t pc, paddr_t target, bool is_tail) {
-// 	if (symbol_tbl == NULL) return;
+void trace_func_call(paddr_t pc, paddr_t target, bool is_tail) {
+	// if (symbol_tbl == NULL) return;
 
-// 	++call_depth;
+	// ++call_depth;
 
-// 	if (call_depth <= 2) return; // ignore _trm_init & main
+	// if (call_depth <= 2) return; // ignore _trm_init & main
 
-// 	int i = find_symbol_func(target, true);
-// 	log_write(FMT_PADDR ": %*scall [%s@" FMT_PADDR "]\n",
-// 		pc,
-// 		(call_depth-3)*2, "",
-// 		i>=0?symbol_tbl[i].name:"???",
-// 		target
-// 	);
+	// int i = find_symbol_func(target, true);
+	// log_write(FMT_PADDR ": %*scall [%s@" FMT_PADDR "]\n",
+	// 	pc,
+	// 	(call_depth-3)*2, "",
+	// 	i>=0?symbol_tbl[i].name:"???",
+	// 	target
+	// );
 
-// 	// if (is_tail) {
-// 	// 	insert_tail_rec(pc, target);
-// 	// }
-// }
+	// if (is_tail) {
+	// 	insert_tail_rec(pc, target);
+	// }
+}
 
 // void trace_func_ret(paddr_t pc) {
 // 	if (symbol_tbl == NULL) return;
