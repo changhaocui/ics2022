@@ -214,27 +214,27 @@ void trace_func_call(paddr_t pc, paddr_t target, bool is_tail) {
 	// }
 }
 
-// void trace_func_ret(paddr_t pc) {
-// 	if (symbol_tbl == NULL) return;
+void trace_func_ret(paddr_t pc) {
+	// if (symbol_tbl == NULL) return;
 	
-// 	if (call_depth <= 2) return; // ignore _trm_init & main
+	// if (call_depth <= 2) return; // ignore _trm_init & main
 
-// 	int i = find_symbol_func(pc, false);
-// 	log_write(FMT_PADDR ": %*sret [%s]\n",
-// 		pc,
-// 		(call_depth-3)*2, "",
-// 		i>=0?symbol_tbl[i].name:"???"
-// 	);
+	// int i = find_symbol_func(pc, false);
+	// log_write(FMT_PADDR ": %*sret [%s]\n",
+	// 	pc,
+	// 	(call_depth-3)*2, "",
+	// 	i>=0?symbol_tbl[i].name:"???"
+	// );
 	
-// 	--call_depth;
+	// --call_depth;
 
-// 	TailRecNode *node = tail_rec_head->next;
-// 	if (node != NULL) {
-// 		int depend_i = find_symbol_func(node->depend, true);
-// 		if (depend_i == i) {
-// 			paddr_t ret_target = node->pc;
-// 			// remove_tail_rec();
-// 			trace_func_ret(ret_target);
-// 		}
-// 	}
-// }
+	// TailRecNode *node = tail_rec_head->next;
+	// if (node != NULL) {
+	// 	int depend_i = find_symbol_func(node->depend, true);
+	// 	if (depend_i == i) {
+	// 		paddr_t ret_target = node->pc;
+	// 		// remove_tail_rec();
+	// 		trace_func_ret(ret_target);
+	// 	}
+	// }
+}
