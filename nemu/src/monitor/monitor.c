@@ -112,7 +112,7 @@ void init_monitor(int argc, char *argv[]) {
   /* Set random seed. */
   init_rand();
   /* 打开elf文件*/
-  init_elf(elf_file);
+  // init_elf(elf_file);
   /* Open the log file. */
   init_log(log_file);
 
