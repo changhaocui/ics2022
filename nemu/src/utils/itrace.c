@@ -46,7 +46,7 @@ void rtrace_display(){
 }
 
 
-
+/*log 的实现*/
 
 typedef struct {
 	char name[32]; // func name, 32 should be enough
@@ -77,6 +77,7 @@ static void read_elf_header(int fd, Elf64_Ehdr *eh) {
 }
 
 
+
 static void read_section(int fd, Elf64_Shdr sh, void *dst) {
 	assert(dst != NULL);
 	assert(lseek(fd, (off_t)sh.sh_offset, SEEK_SET) == (off_t)sh.sh_offset);
@@ -89,6 +90,8 @@ static void read_section_headers(int fd, Elf64_Ehdr eh, Elf64_Shdr *sh_tbl) {
 		assert(read(fd, (void *)&sh_tbl[i], eh.e_shentsize) == eh.e_shentsize);
 	}
 }
+
+
 
 static void read_symbol_table(int fd, Elf64_Ehdr eh, Elf64_Shdr sh_tbl[], int sym_idx) {
   Elf64_Sym sym_tbl[sh_tbl[sym_idx].sh_size];
@@ -153,10 +156,8 @@ void init_elf(const char *elf_file) {
   Elf64_Ehdr eh;
 	read_elf_header(fd, &eh);
 
-
   Elf64_Shdr sh_tbl[eh.e_shentsize * eh.e_shnum];
 	read_section_headers(fd, eh, sh_tbl);
-
 
   read_symbols(fd, eh, sh_tbl);
 
@@ -165,75 +166,75 @@ void init_elf(const char *elf_file) {
 	close(fd);
 }
 
-static int find_symbol_func(paddr_t target, bool is_call) {
-	int i;
-	for (i = 0; i < symbol_tbl_size; i++) {
-		if (ELF64_ST_TYPE(symbol_tbl[i].info) == STT_FUNC) {
-			if (is_call) {
-				if (symbol_tbl[i].addr == target) break;
-			} else {
-				if (symbol_tbl[i].addr <= target && target < symbol_tbl[i].addr + symbol_tbl[i].size) break;
-			}
-		}
-	}
-	return i<symbol_tbl_size?i:-1;
-}
+// static int find_symbol_func(paddr_t target, bool is_call) {
+// 	int i;
+// 	for (i = 0; i < symbol_tbl_size; i++) {
+// 		if (ELF64_ST_TYPE(symbol_tbl[i].info) == STT_FUNC) {
+// 			if (is_call) {
+// 				if (symbol_tbl[i].addr == target) break;
+// 			} else {
+// 				if (symbol_tbl[i].addr <= target && target < symbol_tbl[i].addr + symbol_tbl[i].size) break;
+// 			}
+// 		}
+// 	}
+// 	return i<symbol_tbl_size?i:-1;
+// }
 
-static void insert_tail_rec(paddr_t pc, paddr_t depend) {
-	TailRecNode *node = (TailRecNode *)malloc(sizeof(TailRecNode));
-	node->pc = pc;
-	node->depend = depend;
-	node->next = tail_rec_head->next;
-	tail_rec_head->next = node;
-}
+// static void insert_tail_rec(paddr_t pc, paddr_t depend) {
+// 	TailRecNode *node = (TailRecNode *)malloc(sizeof(TailRecNode));
+// 	node->pc = pc;
+// 	node->depend = depend;
+// 	node->next = tail_rec_head->next;
+// 	tail_rec_head->next = node;
+// }
 
-static void remove_tail_rec() {
-	TailRecNode *node = tail_rec_head->next;
-	tail_rec_head->next = node->next;
-	free(node);
-}
+// static void remove_tail_rec() {
+// 	TailRecNode *node = tail_rec_head->next;
+// 	tail_rec_head->next = node->next;
+// 	free(node);
+// }
 
 void trace_func_call(paddr_t pc, paddr_t target, bool is_tail) {
-	if (symbol_tbl == NULL) return;
+	// if (symbol_tbl == NULL) return;
 
-	++call_depth;
+	// ++call_depth;
 
-	if (call_depth <= 2) return; // ignore _trm_init & main
+	// if (call_depth <= 2) return; // ignore _trm_init & main
 
-	int i = find_symbol_func(target, true);
-	log_write(FMT_PADDR ": %*scall [%s@" FMT_PADDR "]\n",
-		pc,
-		(call_depth-3)*2, "",
-		i>=0?symbol_tbl[i].name:"???",
-		target
-	);
+	// int i = find_symbol_func(target, true);
+	// log_write(FMT_PADDR ": %*scall [%s@" FMT_PADDR "]\n",
+	// 	pc,
+	// 	(call_depth-3)*2, "",
+	// 	i>=0?symbol_tbl[i].name:"???",
+	// 	target
+	// );
 
-	if (is_tail) {
-		insert_tail_rec(pc, target);
-	}
+	// // if (is_tail) {
+	// // 	insert_tail_rec(pc, target);
+	// // }
 }
 
 void trace_func_ret(paddr_t pc) {
-	if (symbol_tbl == NULL) return;
+	// if (symbol_tbl == NULL) return;
 	
-	if (call_depth <= 2) return; // ignore _trm_init & main
+	// if (call_depth <= 2) return; // ignore _trm_init & main
 
-	int i = find_symbol_func(pc, false);
-	log_write(FMT_PADDR ": %*sret [%s]\n",
-		pc,
-		(call_depth-3)*2, "",
-		i>=0?symbol_tbl[i].name:"???"
-	);
+	// int i = find_symbol_func(pc, false);
+	// log_write(FMT_PADDR ": %*sret [%s]\n",
+	// 	pc,
+	// 	(call_depth-3)*2, "",
+	// 	i>=0?symbol_tbl[i].name:"???"
+	// );
 	
-	--call_depth;
+	// --call_depth;
 
-	TailRecNode *node = tail_rec_head->next;
-	if (node != NULL) {
-		int depend_i = find_symbol_func(node->depend, true);
-		if (depend_i == i) {
-			paddr_t ret_target = node->pc;
-			remove_tail_rec();
-			trace_func_ret(ret_target);
-		}
-	}
+	// TailRecNode *node = tail_rec_head->next;
+	// if (node != NULL) {
+	// 	int depend_i = find_symbol_func(node->depend, true);
+	// 	if (depend_i == i) {
+	// 		paddr_t ret_target = node->pc;
+	// 		// remove_tail_rec();
+	// 		trace_func_ret(ret_target);
+	// 	}
+	// }
 }

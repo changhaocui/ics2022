@@ -18,6 +18,9 @@
 #include <cpu/ifetch.h>
 #include <cpu/decode.h>
 
+void trace_func_call(paddr_t pc, paddr_t target, bool is_tail);
+void trace_func_ret(paddr_t pc);
+
 #define R(i) gpr(i)
 #define Mr vaddr_read
 #define Mw vaddr_write
@@ -80,8 +83,21 @@ static int decode_exec(Decode *s) {
     } \
   })
   INSTPAT_START();
-  INSTPAT("??????? ????? ????? ??? ????? 11011 11", jal    , J, s->dnpc = s->pc; s->dnpc += imm; R(dest) = s->pc + 4);
-  INSTPAT("??????? ????? ????? 000 ????? 11001 11", jalr   , I, s->dnpc = (src1 + imm) & ~(word_t)1; R(dest) = s->pc + 4);
+INSTPAT("??????? ????? ????? ??? ????? 11011 11", jal    , J, s->dnpc = s->pc + imm; IFDEF(CONFIG_ITRACE, { 
+  if (dest == 1) { // x1: return address for jumps
+    trace_func_call(s->pc, s->dnpc, false);
+  }
+}); R(dest) = s->pc + 4);
+INSTPAT("??????? ????? ????? 000 ????? 11001 11", jalr   , I, s->dnpc = (src1 + imm) & ~(word_t)1; IFDEF(CONFIG_ITRACE, {
+  if (s->isa.inst.val == 0x00008067) {
+    trace_func_ret(s->pc); // ret -> jalr x0, 0(x1)
+  } else if (dest == 1) {
+    trace_func_call(s->pc, s->dnpc, false);
+  } else if (dest == 0 && imm == 0) {
+    trace_func_call(s->pc, s->dnpc, true); // jr rs1 -> jalr x0, 0(rs1), which may be other control flow e.g. 'goto','for'
+  }
+}); R(dest) = s->pc + 4);
+
 
   INSTPAT("0000000 ????? ????? 111 ????? 01100 11", and    , R, R(dest) = src1 & src2);
   INSTPAT("??????? ????? ????? 111 ????? 00100 11", andi   , I, R(dest) = src1 & imm);
