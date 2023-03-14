@@ -21,10 +21,13 @@ bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) {
   int reg_num = ARRLEN(cpu.gpr);
   for (int i = 0; i < reg_num; i++) {
     if (ref_r->gpr[i] != cpu.gpr[i]) {
+      printf("difftest fail at gpr[%d]\n", i);
       return false;
     }
   }
   if (ref_r->pc != cpu.pc) {
+    printf("difftest fail at pc\n");
+
     return false;
   }
   return true;
